@@ -1,0 +1,31 @@
+#!/sbin/openrc-run
+
+supervisor=supervise-daemon
+
+name="alloy"
+description="Vendor-neutral programmable observability pipelines."
+documentation="https://grafana.com/docs/alloy/"
+
+command="/usr/bin/alloy"
+command_args="run --storage.path=/var/lib/alloy /etc/alloy/config.alloy"
+command_user="alloy"
+directory="/var/lib/alloy"
+pidfile="/run/${RC_SVCNAME}.pid"
+
+depend() {
+    need net
+    after net
+}
+
+start_pre() {
+    checkpath -d -o alloy:alloy -m755 $directory
+    if [ -f /etc/conf.d/alloy ]; then
+        . /etc/conf.d/alloy
+    fi
+}
+
+reload() {
+    ebegin "Reloading $RC_SVCNAME"
+    kill -HUP $(cat /run/${RC_SVCNAME}.pid)
+    eend $?
+}

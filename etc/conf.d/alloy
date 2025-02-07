@@ -1,0 +1,4 @@
+# /etc/conf.d/alloy: config file for /etc/init.d/alloy
+
+ALLOY_BIN=/usr/bin/alloy
+CUSTOM_ARGS=""
